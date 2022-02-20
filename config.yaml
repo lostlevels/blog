@@ -1,0 +1,22 @@
+baseURL: "/"
+languageCode: "en-us"
+title: "Jimmy's Blog"
+theme: "PaperMod"
+menu:
+  main:
+    - identifier: posts
+      name: Posts
+      url: /posts/
+      weight: 10
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 20
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  tableOfContents:
+    endLevel: 4
+    ordered: false
+    startLevel: 3
