@@ -12,6 +12,10 @@ menu:
       name: About
       url: /about/
       weight: 20
+    - identifier: source
+      name: Source Code
+      url: /source/
+      weight: 30
 markup:
   goldmark:
     renderer:
