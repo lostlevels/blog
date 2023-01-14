@@ -8,7 +8,7 @@ ShowToc: false
 
 ## Intro
 
-We will be making will be a simplified multiplayer clone of the arcade game, Mario Bros. It will have no deaths and a single infinite level. It will have rollback networking and should provide a smooth experience for people even with higher latencies.
+We will be making a simplified multiplayer clone of the arcade game, Mario Bros. It will have no deaths and a single infinite level. It will have rollback networking and should provide a smooth experience for people even with higher latencies.
 
 ![Game Screenshot](/images/rollback-game-screenshot.png "Screenshot")
 
