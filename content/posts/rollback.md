@@ -18,6 +18,9 @@ The source code is [here](https://github.com/lostlevels/rollback-networking). Th
 
 Rollback networking is an elegant form of netcode that can be simple and effective to implement. It works for games of all types from twitchy fighting games to slow-paced turn based ones. Players send their inputs to peers and each player will simulate the game with these inputs. Each player should arrive at the same game state. A local player's input will be applied immediately. Once a remote player's input arrives, the game will need to rewind from the time of the remote input, apply the remote players input for that frame, and resimulate up to the current frame. This means it must keep track of previous game states, not just the current moment.
 
+![Rollback Local Input](/images/rollback-local.svg "Local Input")
+![Rollback Remote Input](/images/rollback-remote.svg "Remote Input")
+
 Rollback networking has many advantages. Because there is no central server to send and receive a response from, the latency is effectively halved. Rather than having a round trip from player A to a central server and awaiting a response, player A can send their inputs to player B and continue simulating. Because inputs are the only thing that are sent, bandwidth is also reduced as the state of the world never needs to be continuously sent other than the initial state.
 
 However, rollback networking can be more computationally expensive. Because it needs to continuously apply peer inputs, it may end up simulating many frames for each peer input. This is because a peer's input will be from a past time. The system will need to apply the peer's input in the past and resimulate all the way up to the present time. You can watch more of the idea behind this in [this GDC talk](https://www.youtube.com/watch?v=7jb0FOcImdg). Rollback networking can also be more difficult to implement if the game was not designed for it as the simulation must be deterministic. It can also be very difficult to debug when and why a simulation diverges.
@@ -74,14 +77,16 @@ The source code is available [here](https://github.com/lostlevels/rollback-netwo
 
 #### Game specific components
 
-- `block.js` - A Block is the main collidable thing in the game. Players can jump and headbutt them to flip an enemy.
+- `block.js` - A Block is the main collidable thing in the game. Players can jump and headbutt them to flip an enemy. If it is a question block, it will also create an object when headbutted.
 - `enemy.js` - An enemy is the main thing that players interact with. Touching an enemy will either cause the player to lose points and be temporarily frozen or gain points depending on whether the enemy is flipped or not.
 - `player.js` - Playable character that responds to input and interacts with the world.
+- `projectile.js` - Anything the player can kick to activate. Hurts players and enemies alike if collides.
+- `pickup.js` - Coins to pickup for increased score. Could be a star, weapon, etc in the future.
 - `spawner.js` - Spawns enemies at periodic intervals.
 - `map.js` - The initial game state with enemies, blocks, and players.
 - `gamestate.js` - Holds the entire game state. Simulation can be advanced forward one frame by calling `.update`
-- `world.js` - Manages the GameState history for rewinding and simulation. Each GameState is saved in it's entirety for simplicity.
-- `gamescene.js` - An extended `Phaser.Scene` that uses the connection, and manages game state. It also syncs the sprites/views with the models/game state.
+- `world.js` - Manages the GameState history for rewinding and simulation. Each GameState is saved in it's entirety for simplicity, as opposed to having a compressed "SaveState" or only recording delta changes from the previous state.
+- `gamescene.js` - An extended `Phaser.Scene` that uses `ConnectionHandler`, and manages game state. It also syncs the sprites/views with the models/game state.
 
 #### Potential improvements
 
